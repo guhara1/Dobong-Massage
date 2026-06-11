@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>스피드 마사지 매거진</title>
+    <link>https://www.dobong-speed.example.com/magazine/</link>
+    <description>도봉구 방문 관리 이용 가이드와 마사지 정보 매거진</description>
+    <language>ko</language>
+    <lastBuildDate>Thu, 11 Jun 2026 09:00:00 +0900</lastBuildDate>
+    <atom:link href="https://www.dobong-speed.example.com/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>스웨디시와 타이마사지, 무엇이 다르고 어떻게 고를까</title>
+      <link>https://www.dobong-speed.example.com/magazine/swedish-vs-thai/</link>
+      <guid isPermaLink="true">https://www.dobong-speed.example.com/magazine/swedish-vs-thai/</guid>
+      <description>스웨디시와 타이마사지를 목적·압의 성격·복장과 샤워·받은 직후의 몸 상태·첫 경험 다섯 기준으로 비교했습니다. 고민되는 분을 위한 결정 가이드.</description>
+      <pubDate>Tue, 09 Jun 2026 09:00:00 +0900</pubDate>
+    </item>
+    <item>
+      <title>출장마사지 첫 예약 전에 궁금한 것들, 질문 10개에 답합니다</title>
+      <link>https://www.dobong-speed.example.com/magazine/first-time-guide/</link>
+      <guid isPermaLink="true">https://www.dobong-speed.example.com/magazine/first-time-guide/</guid>
+      <description>출장마사지를 처음 알아보는 분이 상담에서 가장 자주 묻는 열 가지 질문과 답을 정리했습니다. 공간과 준비물, 복장, 압 조절, 안전, 결제 순서까지.</description>
+      <pubDate>Thu, 04 Jun 2026 09:00:00 +0900</pubDate>
+    </item>
+    <item>
+      <title>마사지는 잠을 어떻게 바꾸나, 얕은 잠을 위한 저녁 관리 설계</title>
+      <link>https://www.dobong-speed.example.com/magazine/sleep-and-massage/</link>
+      <guid isPermaLink="true">https://www.dobong-speed.example.com/magazine/sleep-and-massage/</guid>
+      <description>긴장된 몸이 잠을 막는 이유, 마사지가 부교감신경을 깨우는 원리, 취침 전 관리의 시간 배치를 정리했습니다. 마사지로 안 되는 불면의 구분까지.</description>
+      <pubDate>Sun, 31 May 2026 09:00:00 +0900</pubDate>
+    </item>
+    <item>
+      <title>운동 후 회복 마사지, 최적의 타이밍은 따로 있다</title>
+      <link>https://www.dobong-speed.example.com/magazine/post-workout-timing/</link>
+      <guid isPermaLink="true">https://www.dobong-speed.example.com/magazine/post-workout-timing/</guid>
+      <description>운동 직후와 당일 저녁, 이튿날의 마사지가 회복에 미치는 차이를 정리했습니다. 러닝·웨이트·골프 등 종목별 관리 부위와 대회 전 주의점 포함.</description>
+      <pubDate>Tue, 26 May 2026 09:00:00 +0900</pubDate>
+    </item>
+    <item>
+      <title>목·어깨 결림, 어디까지 스스로 풀고 언제 맡겨야 하나</title>
+      <link>https://www.dobong-speed.example.com/magazine/neck-shoulder-care/</link>
+      <guid isPermaLink="true">https://www.dobong-speed.example.com/magazine/neck-shoulder-care/</guid>
+      <description>목·어깨 결림이 만들어지는 과정과 셀프 스트레칭으로 되는 범위, 전문 관리로 넘어가야 할 신호, 병원이 먼저인 증상까지 단계별로 정리했습니다.</description>
+      <pubDate>Wed, 20 May 2026 09:00:00 +0900</pubDate>
+    </item>
+    <item>
+      <title>부모님 방문 마사지 선물, 대리 예약 전에 챙길 것들</title>
+      <link>https://www.dobong-speed.example.com/magazine/parents-gift/</link>
+      <guid isPermaLink="true">https://www.dobong-speed.example.com/magazine/parents-gift/</guid>
+      <description>부모님께 방문 관리를 선물하려는 자녀를 위한 가이드. 어르신 관리에서 달라지는 점, 예약 전 건강 확인 세 가지, 대리 예약 절차와 설득 요령.</description>
+      <pubDate>Thu, 14 May 2026 09:00:00 +0900</pubDate>
+    </item>
+  </channel>
+</rss>

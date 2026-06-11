@@ -8,6 +8,7 @@ content/ 패키지의 페이지 정의를 읽어 정적 HTML을 생성한다.
   - sitemap.xml 에는 index 허용 페이지만 포함
   - 지역+역+테마 조합 경로는 생성 자체가 불가능한 구조
 """
+import datetime
 import html
 import os
 import re
@@ -144,6 +145,7 @@ def render_page(page: dict) -> str:
 <meta name="description" content="{desc}">
 {robots}
 <link rel="canonical" href="{canonical}">
+<link rel="alternate" type="application/rss+xml" title="{BRAND} 매거진" href="/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
@@ -250,9 +252,23 @@ def render_page(page: dict) -> str:
 """
 
 
+def page_date(page: dict) -> str:
+    """페이지 lastmod — 매거진은 발행일(JSON-LD datePublished), 그 외는 빌드일."""
+    m = re.search(r'"datePublished":\s*"(\d{4}-\d{2}-\d{2})"', page.get("extra_head", ""))
+    return m.group(1) if m else datetime.date.today().isoformat()
+
+
+def rfc822(iso_date: str) -> str:
+    d = datetime.datetime.strptime(iso_date, "%Y-%m-%d")
+    return d.strftime("%a, %d %b %Y 09:00:00 +0900")
+
+
 def build() -> None:
     report = []
-    sitemap_urls = []
+    sitemap_entries = []  # (url, lastmod)
+    rss_items = []        # 매거진 아티클 — 날짜가 있는 콘텐츠만
+
+    base = BASE_URL.rstrip("/")
 
     for page in PAGES:
         path = page["path"]  # "" 또는 "dobong-gu/ssangmun-dong/" 형태
@@ -265,12 +281,15 @@ def build() -> None:
         chars = text_length(page["body"])
         noindex = page.get("noindex", False) or chars < MIN_INDEX_CHARS
         if not noindex:
-            sitemap_urls.append(BASE_URL.rstrip("/") + "/" + path)
+            sitemap_entries.append((f"{base}/{path}", page_date(page)))
+            if path.startswith("magazine/") and path != "magazine/":
+                rss_items.append(page)
         report.append((path or "/", chars, "noindex" if noindex else "index"))
 
-    # sitemap.xml
+    # sitemap.xml — lastmod 포함 (구글·네이버 재수집 판단 신호)
     urls = "\n".join(
-        f"  <url><loc>{u}</loc></url>" for u in sitemap_urls
+        f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>"
+        for u, d in sitemap_entries
     )
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(
@@ -279,11 +298,44 @@ def build() -> None:
             f"{urls}\n</urlset>\n"
         )
 
-    # robots.txt
+    # rss.xml — 네이버 서치어드바이저는 사이트맵과 RSS 병행 제출을 권장
+    rss_items.sort(key=page_date, reverse=True)
+    items = "\n".join(
+        "    <item>\n"
+        f"      <title>{html.escape(p['h1'])}</title>\n"
+        f"      <link>{base}/{p['path']}</link>\n"
+        f"      <guid isPermaLink=\"true\">{base}/{p['path']}</guid>\n"
+        f"      <description>{html.escape(p['desc'])}</description>\n"
+        f"      <pubDate>{rfc822(page_date(p))}</pubDate>\n"
+        "    </item>"
+        for p in rss_items
+    )
+    now822 = rfc822(datetime.date.today().isoformat())
+    with open(os.path.join(ROOT, "rss.xml"), "w", encoding="utf-8") as f:
+        f.write(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+            "  <channel>\n"
+            f"    <title>{BRAND} 매거진</title>\n"
+            f"    <link>{base}/magazine/</link>\n"
+            "    <description>도봉구 방문 관리 이용 가이드와 마사지 정보 매거진</description>\n"
+            "    <language>ko</language>\n"
+            f"    <lastBuildDate>{now822}</lastBuildDate>\n"
+            f'    <atom:link href="{base}/rss.xml" rel="self" type="application/rss+xml" />\n'
+            f"{items}\n"
+            "  </channel>\n"
+            "</rss>\n"
+        )
+
+    # robots.txt — 구글봇·네이버봇(Yeti) 명시 허용 + 사이트맵·RSS 등록
     with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(
             "User-agent: *\nAllow: /\n\n"
-            f"Sitemap: {BASE_URL.rstrip('/')}/sitemap.xml\n"
+            "User-agent: Googlebot\nAllow: /\n\n"
+            "User-agent: Googlebot-Image\nAllow: /\n\n"
+            "User-agent: Yeti\nAllow: /\n\n"
+            f"Sitemap: {base}/sitemap.xml\n"
+            f"Sitemap: {base}/rss.xml\n"
         )
 
     # .nojekyll (GitHub Pages)
@@ -294,7 +346,7 @@ def build() -> None:
     for p, c, r in sorted(report):
         flag = "" if (r == "noindex" or MIN_INDEX_CHARS <= c <= 2500) else "  ⚠"
         print(f"{p.ljust(width)}  {str(c).rjust(5)}  {r}{flag}")
-    print(f"\n{len(report)} pages built, {len(sitemap_urls)} in sitemap.")
+    print(f"\n{len(report)} pages built, {len(sitemap_entries)} in sitemap, {len(rss_items)} in rss.")
 
 
 if __name__ == "__main__":

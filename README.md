@@ -45,5 +45,38 @@ python3 build.py
 ## 배포 전 해야 할 일
 
 1. `content/site.py`의 `BASE_URL`을 실제 도메인으로 변경
-2. `python3 build.py` 재실행 (canonical·sitemap·robots.txt에 반영됨)
-3. Google Search Console에 `sitemap.xml` 제출
+2. `python3 build.py` 재실행 (canonical·sitemap·rss·robots.txt에 반영됨)
+3. HTTPS 활성화 후 배포
+
+## 빠른 색인(인덱싱) 등록 절차
+
+빌드가 자동 생성하는 색인 파일:
+
+- `sitemap.xml` — 색인 42페이지 전체 + `lastmod` (재수집 판단 신호)
+- `rss.xml` — 매거진 아티클 피드 (네이버는 사이트맵·RSS 병행 제출 권장)
+- `robots.txt` — 전체 허용 + Googlebot·Yeti(네이버) 명시 + 사이트맵·RSS 위치 등록
+- 전 페이지 `<head>`에 RSS 자동발견 링크 포함
+
+### 구글 (Search Console)
+
+1. 속성 등록 후 `sitemap.xml` 제출 (Sitemaps 메뉴)
+2. 메인·지역 허브 등 핵심 URL은 "URL 검사 → 색인 생성 요청"으로 개별 요청
+3. 구글은 IndexNow를 사용하지 않으므로 위 두 가지가 전부다
+
+### 네이버 (서치어드바이저)
+
+1. 소유 확인 — 메인 페이지에 확인 메타 태그 이미 포함됨
+2. 요청 → 사이트맵 제출에 `sitemap.xml`, RSS 제출에 `rss.xml` 등록
+3. 핵심 URL은 "요청 → 웹 페이지 수집"으로 개별 수집 요청 (일일 한도 내)
+
+### IndexNow (네이버·빙 즉시 통지)
+
+배포 후 한 번 실행하면 사이트맵의 전체 URL 변경 사실을 즉시 통지한다:
+
+```bash
+python3 indexnow.py                # sitemap.xml 전체 URL 제출
+python3 indexnow.py https://…/url/ # 특정 URL만 제출
+```
+
+키 파일(`dc15b530a6d14855ba84c962710f017f.txt`)이 사이트 루트에 함께 배포되어야
+검증이 통과된다. 콘텐츠를 수정·재배포할 때마다 다시 실행하면 된다.
