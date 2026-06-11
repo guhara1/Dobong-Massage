@@ -10,5 +10,5 @@ Allow: /
 User-agent: Yeti
 Allow: /
 
-Sitemap: https://www.dobong-speed.example.com/sitemap.xml
-Sitemap: https://www.dobong-speed.example.com/rss.xml
+Sitemap: https://dobong-massage.pages.dev/sitemap.xml
+Sitemap: https://dobong-massage.pages.dev/rss.xml
